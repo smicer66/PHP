@@ -1,0 +1,32 @@
+ul.menu {list-style:none; margin:0; padding:0;}
+ul.menu * {margin:0; padding:0;font-size:12px; font-family:'trebuchet MS', Verdana, Georgia, "Times New Roman", Times, serif; }
+ul.menu a {display:block; color: #CC6633; text-decoration:none; text-align:center; height:20px;}
+ul.menu a:hover {display:block; color:#000; text-decoration:none; text-align:center; color: #000;}
+ul.menu li {position:relative; float:left;margin-right:1px}
+ul.menu ul {position:absolute; top:26px; left:0; display:none; opacity:0; list-style:none}
+ul.menu ul li {position:relative; border:1px solid #aaa; border-top: #000000 1px solid; top: 3px; width:150px; margin:0; height:20px; }
+ul.menu ul li a {display:block; padding-top:1px 7px 5px; background-color:#d1d1d1; text-align:left; padding-left: 5px; height:20px; }
+ul.menu ul li a:hover {background-color:#c5c5c5;  text-align:left; padding-left: 5px; height:20px; color:#000000; }
+ul.menu ul ul {left:148px; top:-1px}
+ul.menu .menulink { padding:1px 6px 7px; border-left: 1px #ffffff solid; font-weight:bold; width:150px; background:url(../../../core/menus/view/images/menubarbg.gif)}
+ul.menu .menulink:hover, ul.menu .menuhover { padding:1px 7px 5px; background:url(../../../core/menus/view/images/menubarbghover.gif)}
+ul.menu .sub {background:#d1d1d1 url(../../Copy of demo_inner/css/images/arrow.gif) 136px 8px no-repeat;}
+ul.menu .topline {border-top:1px solid #aaa}
+
+.menuDiv{
+	z-index:1;
+	background: url(../../../core/menus/view/images/menubarbg.gif);
+}
+
+#menubar {
+	
+	position: relative;
+	width:100%;
+	background: transparent;
+	height:25px;
+	top: 0px;
+	/*background-color: #A7B5CE;
+	left: 0px;*/
+	background-image: url(../../../core/menus/view/images/menubarbg.gif);
+	z-index:791;
+}		

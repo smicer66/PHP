@@ -1,0 +1,30 @@
+/* CSS Document */
+.imagePreview
+{
+	border: #CCCCCC 1px solid;
+	width: 130px;
+	height: 80px;
+}
+
+.objectivePreviewTable
+{
+	border:#CCCCCC 1px solid;
+}
+
+.listingCells
+{
+	font-family:'trebuchet MS', Verdana, Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	padding: 2px;
+	background-color: #F4F4F4;
+	border:#CCCCCC 1px solid;
+}
+
+.textBodyStyle1
+{
+	font-family:'trebuchet MS', Verdana, Georgia, "Times New Roman", Times, serif;
+	font-size: 11px;
+	line-height: 15px;
+	font-weight: bold;
+	color:#000000;
+}

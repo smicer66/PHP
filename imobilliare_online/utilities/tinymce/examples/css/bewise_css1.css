@@ -1,0 +1,59 @@
+/* CSS Document */
+
+.cell_leader{
+vertical-align: middle
+}
+
+.cell_leader_table{
+background: #CCCCCC;
+border: #333333 1px solid;
+height: 25px;
+width: 100px;
+padding-left: 20px;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+vertical-align: middle
+}
+
+
+.cell_leader1{
+vertical-align: middle;
+left: -470px;
+position: relative;
+}
+
+.cell_leader2{
+vertical-align: middle;
+left: -370px;
+position: relative;
+}
+
+.cell_leader3{
+vertical-align: middle;
+left: -270px;
+position: relative;
+}
+
+.cell_leader4{
+vertical-align: middle;
+left: -170px;
+position: relative;
+}
+
+.cell_leader_table_sub1{
+background: #8D8D8D;
+border: #333333 1px solid;
+height: 25px;
+width: 120px;
+padding-left: 50px;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 12px;
+vertical-align: middle
+}
+
+.cell_leader_dgm{
+vertical-align: middle;
+left: 0px;
+position: relative;
+background-color:#999999;
+}

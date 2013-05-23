@@ -1,0 +1,305 @@
+<?php
+ob_start();
+$site=new Site(); 
+$siteDet=$site->getDetails();
+$features=new Feature();
+$url='Location: index.php';
+$administrator=new Administrator();
+if($_SERVER['QUERY_STRING'])
+{
+	$uri=".php?".$_SERVER['QUERY_STRING'];
+}
+else
+{
+	$uri=".php";
+}
+$administrator->grantAccess(($_REQUEST['fid']) ,$url);
+
+$error=new Error();
+$user=new User();
+
+if(isset($_REQUEST['search_start']))//start of property listing
+{
+	$start=$_REQUEST['search_start'];
+}
+else
+{
+	$start=0;
+}
+
+if(isset($_REQUEST['list']))//start of property listing
+{
+	$end=$siteDet['adminResultsDisplayNumber'];
+	
+}
+else
+{
+	$end=$siteDet['adminResultsDisplayNumber'];
+}
+
+if(isSuperAdmin($_SESSION['uid']))
+{
+	$sql=PROPERTY::getMyPropertyListing($start,$end);
+	$totalNoResults=PROPERTY::getMyListingCount();
+}
+else
+{
+	$sql=PROPERTY::getMyPropertyListing($start,$end, $_SESSION['uid']);
+	$totalNoResults=PROPERTY::getMyListingCount($_SESSION['uid']);
+}
+
+?>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title><?php $site=new Site(); echo $site->getTitle()." - Administrator Area";?></title>
+<script type="text/javascript" src="../includes/validate.js"></script>
+<script type="text/javascript" src="../includes/jacs.js"></script>
+<link href="view/css/orange_admin.css" rel="stylesheet" type="text/css" />
+<script  src="../scripts/error.js" type="text/javascript"></script>
+<script src="../includes/error.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" class="cellType4">
+  <tr>
+    <td colspan="2" class="cellType5"><table width="100%" border="0" cellspacing="0">
+      <tr>
+        <td width="313"><a href="http://www.<?php echo $_SERVER['HTTP_HOST'];?>"><img src="../images/houselogo.png" width="72" height="64" border="0" align="left" /></a><img src="../images/houselogoname.png" width="220" height="64" /></td>
+        <td align="right"><span>Portal Manager</span></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td width="66%" class="cellType6">Client: <?php //include_once($_SERVER['DOCUMENT_ROOT']."/".substr(substr($_SERVER['REQUEST_URI'],1,strlen($_SERVER['REQUEST_URI'])), 0, strpos($_SERVER['REQUEST_URI'],'/',1))."core/site/site_class.php");
+	$site=new Site();$siteDet=$site->getDetails();echo $siteDet['clientName'];?> </td>
+    <td width="47%" align="right" class="cellType6"><span class="texttype1"><?php if(isset($_SESSION['uid'])){ ?>Logged in as <?php echo $_SESSION['actnpals'];}?></span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; <?php if(isset($_SESSION['uid'])){ ?><a href="../index.php?logout=1">Logout</a> <?php } else { ?> <a href="../index.php">Login</a>}<?php } ?>&nbsp;&nbsp;&nbsp;<a href='<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('home'); ?>'>Portal Grid Home</a>&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2"><table width="100%" border="0" cellpadding="5" cellspacing="5" class="cellType3">
+      <tr>
+        <td width="16%" valign="top" class="cellType7"><table width="99%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="cellType2">Administrative Functions</td>
+          </tr>
+          <?php
+		  	if(USER::getUserTypeId($_SESSION['uid'])==USERTYPE::getUserTypeId('Administrator'))
+			{
+		  ?><tr>
+            <td class="cellType1"><?php $siteIn=new Site(); if($siteIn->siteOnline){?><a href="../install/installer.php"><?php }?>Install<?php if($siteIn->siteOnline){ ?></a><?php }?>&nbsp;/&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('portal_updater'); ?>">Updates</a></td>
+            </tr>
+			<?php
+		  	}
+		  ?>
+          <tr>
+            <td class="cellType1"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="index.php?fid=<?php echo ADMINISTRATOR::getAdminFunctionId('features_manager')?>">Features Manager </a></td>
+          </tr>
+          
+		  <?php
+		  	if(USER::getUserTypeId($_SESSION['uid'])==USERTYPE::getUserTypeId('Administrator'))
+			{
+		  ?>
+          <tr>
+            <td class="cellType1"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('components_manager'); ?>">Components Manager</a> </td>
+          </tr>
+          <tr>
+            <td class="cellType1"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('configuration_manager'); ?>">Site Configurations</a></td>
+          </tr>
+          <tr>
+            <td class="cellType1"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('template_manager'); ?>">Template Manager</a> </td>
+          </tr>
+          <?php
+		  	}
+		  ?>
+          
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+          <tr>
+            <td><table width="100%" border="0" cellspacing="2" cellpadding="5">
+              <tr>
+                <td class="cellType2">Other Links: </td>
+              </tr>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_creator'); ?>">Property Creator</a></td>
+              </tr>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_listing'); ?>">Property Listings</a></td>
+              </tr>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_add_images'); ?>&amp;mod=1">Add Images/Files To Property</a></td>
+              </tr>
+              
+			  
+		  <?php
+		  	if(USER::getUserTypeId($_SESSION['uid'])==USERTYPE::getUserTypeId('Administrator'))
+			{
+		  ?>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_type_creator'); ?>">Create Property Types</a></td>
+              </tr>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_type_updater'); ?>">Edit Property Types</a></td>
+              </tr>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_category_creator'); ?>">Create Property Type Category</a></td>
+              </tr>
+              <tr>
+                <td class="cellType11"><img src="view/images/154.png" width="16" height="16" align="absmiddle" />&nbsp;<a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_category_updater'); ?>">Edit Property Type Category</a><a href="<?php echo "?fid=".ADMINISTRATOR::getAdminFunctionId('property_listing'); ?>"></a></td>
+              </tr>
+			  
+			 <?php
+		  	}
+		  ?>
+            </table></td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        </table></td>
+        <td valign="top"><table width="100%" border="0" cellspacing="5" cellpadding="5">
+          <tr>
+            <td align="left" valign="bottom" bgcolor="#F8F8F8" class="cellType6"><span class="headers">Features Manager - Property Listing </span></td>
+          </tr>
+          <tr>
+            <td align="center" valign="bottom" bgcolor="#F8F8F8" class="cellType7">
+              <table width='100%' border='0' cellspacing='5' cellpadding='5'>
+                
+                
+                
+                <tr>
+                  <td align="left" valign="bottom" bgcolor="#F8F8F8" class="cellType7"><?php
+			  $error->displayComponent($_REQUEST['errcpj'], $_SERVER['HTTP_REFERER'], 1);
+			  ?>
+			  <form action="index.php<?php 
+			if(strlen($_SERVER['QUERY_STRING'])>0)
+			{
+				echo "?".$_SERVER['QUERY_STRING'];
+			}
+			else
+			{
+				
+			}
+			 ?>" method="post" enctype="multipart/form-data">
+
+                          <table width="100%" border="0" cellspacing="2" cellpadding="5">
+                            <tr>
+                              <td width="23%" valign="top" class="cellType2">Property Details   <span class="texttype2"></span></td>
+                              <td width="15%" valign="top" class="cellType2">Transaction Type </td>
+                              <td width="16%" valign="top" class="cellType2">Pricing</td>
+                              <td width="16%" valign="top" class="cellType2">Listing Started </td>
+                              <td width="10%" valign="top" class="cellType2">No Of Days Left </td>
+                              <td valign="top" class="cellType2">Set Listing Status </td>
+                            </tr>
+                            <?php
+			
+		
+			while($result = $mysql->fetch_assoc_mine($sql))
+			{
+				
+				 $checked4=''; $checked5='';
+				 $propTransactionName=PROPERTY::getPropertyTransaction($result['transactionTypeId']);
+				 $noOfSecsRan=PROPERTY::noOfSecsRan($result['id']);
+				// echo floor($noOfSecsRan)."<br />";
+				 $noOfDaysLeft=$result['period'] - floor($noOfSecsRan);
+
+				
+				if($result['status']=='Suspended')
+				{
+					$checked4="checked='checked'";
+				}
+				else if($result['status']=='Not Started')
+				{
+					$checked4="disabled='disabled'";
+				}
+				else if($result['status']=='Expired')
+				{
+					$checked4="disabled='disabled'";
+				}
+				else if($result['status']=='Invalid')
+				{
+					$checked4="disabled='disabled'";
+				}
+				
+				
+				echo "<tr>
+			  <td valign='top' class='cellType11'>Title: <br /><a href='index.php?fid=".ADMINISTRATOR::getAdminFunctionId('property_creator')."&mod=1&id=".$result['id']."'>".getRealData($result['title'])."</a><br />Property Id: <br />".getRealData($result['uniqueId'])."</td>
+			  <td valign='top' class='cellType11'>".$propTransactionName."</td>
+			  <td valign='top' class='cellType11'>".getRealData($result['pricing'])."</td>
+			  <td valign='top' class='cellType11'>".getRealData($result['dateCreated'])."Hrs <br />(yy-mm-dd)</td>
+			  <td valign='top' class='cellType11'>";
+			  
+			  if(($result['status']=='Not Started') || ($result['status']=='Invalid'))
+			  {
+			  	echo "Not Applicable&nbsp; ";
+			  }
+			  else
+			  {
+			  	echo "approx. ".$noOfDaysLeft;
+			  }	
+				echo "</td>
+			  <td valign='top' class='cellType7'>";
+			  
+			  	if(($result['status']=='Expired') || ($result['status']=='Invalid') || ($result['status']=='Not Started'))
+			  	{
+			  		echo $result['status'];
+					if($result['status']=='Not Started')
+					{
+						echo "<br />
+						<a href='?fid=".ADMINISTRATOR::getAdminFunctionId('start_pause_listing')."&mod=1&fiid=".$result['id']."'>Click To Start</a>";
+					}
+				}
+				else
+				{
+					echo "<select name='adminPause".$result['id']."' ".$checked4.">".append_property_status($result['status'])."</select>";
+				}
+			  echo "</td>";
+				  
+				  echo "</tr>";
+			}
+		?>
+                          </table>
+                          <table width="100%" border="0" cellspacing="2" cellpadding="5">
+                            <tr>
+                              <td colspan='6' valign="top" class="cellType11">
+							  <?php ADMINISTRATOR::paginateResults($totalNoResults,$siteDet['adminResultsDisplayNumber']);?></td>
+                            </tr>
+                            <tr>
+                              <td colspan='6' valign="top" class="cellType11"><input name="Property_Listings" type="submit" id="Edit1" value="Update" />
+							  <?php 
+							  	if(isSuperAdmin($_SESSION['uid']))
+								{
+							  ?>
+							  <input name="Property_Listings" type="submit" id="Edit1" value="Automatically Set Status" />
+							  <?php
+							  	}
+							  ?>
+							  </td>
+                            </tr>
+                          </table>
+                      </form></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center" valign="top">&nbsp;</td>
+      </tr>
+    </table></td>
+  </tr>
+</table><br />
+<div class="footer">
+  <div align="left"><?php //include_once($_SERVER['DOCUMENT_ROOT']."/".substr(substr($_SERVER['REQUEST_URI'],1,strlen($_SERVER['REQUEST_URI'])), 0, strpos($_SERVER['REQUEST_URI'],'/',1))."component/footer/footer_class.php");
+	$fot=new Footer();echo $fot->displayComponent(NULL);?></div>
+</div>
+</body>
+</html>
